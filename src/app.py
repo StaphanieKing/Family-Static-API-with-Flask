@@ -31,14 +31,28 @@ def handle_hello():
     # this is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
     response_body = {
-        "hello": "world",
         "family": members
     }
 
-
+    if len(members) == 0:
+        return "Error,No family members found", 400
     return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
+@app.route('/members/<init :id>', methods=['GET'])
+def get_specific_family_get_member(id):
+    member = jackson_family.get_member(id)
+
+    if member: 
+        return jsonify(member), 200
+    else:
+        return jsonify({
+            'status':'failed'
+            'message':'user not found'
+        }), 400    
+
