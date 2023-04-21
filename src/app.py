@@ -35,24 +35,42 @@ def handle_hello():
     }
 
     if len(members) == 0:
-        return "Error,No family members found", 400
+        return "Error, no family members found", 400
     return jsonify(response_body), 200
+
+@app.route('/members/<int:id>', methods=['GET'])
+def get_specific_family_member(id):
+    member= jackson_family.get_member(id)
+    
+    if member:
+        return jsonify(member), 200
+    else:
+        return jsonify({
+            'status': 'failed',
+            'message': 'User not found'
+        }), 400
+
+@app.route('/members/<int:id>', methods=['DELETE'])
+def delete_specific_family_member(id):
+    member= jackson_family.get_member(id)
+    
+    if member:
+        #return jsonify(member), 200 same as GET 
+        jackson_family.delete_member(id)
+        return jsonify({
+            'status': 'successful',
+            'message': 'Family member successfully deleted'
+        }), 200
+        
+    else:
+        return jsonify({
+            'status': 'failed',
+            'message': 'User not found'
+        }), 400
+        
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=True)
-
-
-@app.route('/members/<init :id>', methods=['GET'])
-def get_specific_family_get_member(id):
-    member = jackson_family.get_member(id)
-
-    if member: 
-        return jsonify(member), 200
-    else:
-        return jsonify({
-            'status':'failed'
-            'message':'user not found'
-        }), 400    
-

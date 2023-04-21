@@ -13,7 +13,7 @@ class APIException(Exception):
     def to_dict(self):
         rv = dict(self.payload or ())
         rv['message'] = self.message
-        return rv
+        return rvgil
 
 def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
